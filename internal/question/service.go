@@ -26,14 +26,14 @@ func (s *Service) GetByID(id int) (map[string]any, error) {
 	if err != nil {
 		return nil, err
 	}
-	answer, err := s.answers.GetByID(id)
+	answers, err := s.answers.GetByQuestionID(id)
 	if err != nil {
 		return nil, err
 	}
 
 	return map[string]any{
 		"question": q,
-		"answer":   answer,
+		"answers":  answers,
 	}, nil
 }
 
