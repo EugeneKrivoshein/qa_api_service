@@ -15,6 +15,14 @@ type Handler struct {
 	Service *Service
 }
 
+// GetQuestions godoc
+// @Summary Get all questions
+// @Description Получает список всех вопросов
+// @Tags questions
+// @Produce json
+// @Success 200 {array} models.Question
+// @Failure 500 {object} map[string]string
+// @Router /questions [get]
 func (h *Handler) GetQuestions(w http.ResponseWriter, r *http.Request) {
 	questions, err := h.Service.GetAll()
 	if err != nil {
@@ -26,6 +34,17 @@ func (h *Handler) GetQuestions(w http.ResponseWriter, r *http.Request) {
 	logrus.Infof("Fetched %d questions", len(questions))
 }
 
+// CreateQuestion godoc
+// @Summary Create a question
+// @Description Создает новый вопрос
+// @Tags questions
+// @Accept json
+// @Produce json
+// @Param question body models.Question true "Question text"
+// @Success 200 {object} models.Question
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /questions [post]
 func (h *Handler) CreateQuestion(w http.ResponseWriter, r *http.Request) {
 	var q models.Question
 	if err := json.NewDecoder(r.Body).Decode(&q); err != nil {
@@ -47,6 +66,15 @@ func (h *Handler) CreateQuestion(w http.ResponseWriter, r *http.Request) {
 	response.WriteJSON(w, q)
 }
 
+// GetQuestionByID godoc
+// @Summary Get question by ID
+// @Description Получает вопрос по ID вместе с ответами
+// @Tags questions
+// @Produce json
+// @Param id path int true "Question ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 404 {object} map[string]string
+// @Router /questions/{id} [get]
 func (h *Handler) GetQuestionByID(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(idStr)
@@ -61,6 +89,14 @@ func (h *Handler) GetQuestionByID(w http.ResponseWriter, r *http.Request) {
 	logrus.Infof("Fetched question ID=%d with %d answers", id, len(data["answers"].([]models.Answer)))
 }
 
+// DeleteQuestion godoc
+// @Summary Delete question
+// @Description Удаляет вопрос и все его ответы
+// @Tags questions
+// @Param id path int true "Question ID"
+// @Success 204 {string} string "No Content"
+// @Failure 404 {object} map[string]string
+// @Router /questions/{id} [delete]
 func (h *Handler) DeleteQuestion(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(idStr)

@@ -21,3 +21,10 @@ go test ./tests -count=1
 
 ```bash
 http://localhost:8080
+```
+
+Swagger документация 
+
+```bash
+http://localhost:8080/swagger/index.html
+```

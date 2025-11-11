@@ -1,0 +1,220 @@
+basePath: /
+definitions:
+  models.Answer:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      question_id:
+        type: integer
+      text:
+        type: string
+      user_id:
+        type: string
+    type: object
+  models.Question:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      text:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API для вопросов и ответов
+  title: QA API Service
+  version: "1.0"
+paths:
+  /answers/{id}:
+    delete:
+      description: Удаляет ответ
+      parameters:
+      - description: Answer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete answer
+      tags:
+      - answers
+    get:
+      description: Получает ответ по ID
+      parameters:
+      - description: Answer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Answer'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get answer by ID
+      tags:
+      - answers
+  /questions:
+    get:
+      description: Получает список всех вопросов
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Question'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all questions
+      tags:
+      - questions
+    post:
+      consumes:
+      - application/json
+      description: Создает новый вопрос
+      parameters:
+      - description: Question text
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/models.Question'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Question'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a question
+      tags:
+      - questions
+  /questions/{id}:
+    delete:
+      description: Удаляет вопрос и все его ответы
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete question
+      tags:
+      - questions
+    get:
+      description: Получает вопрос по ID вместе с ответами
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get question by ID
+      tags:
+      - questions
+  /questions/{id}/answers:
+    post:
+      consumes:
+      - application/json
+      description: Добавляет ответ к вопросу
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Answer body
+        in: body
+        name: answer
+        required: true
+        schema:
+          $ref: '#/definitions/models.Answer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Answer'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create answer
+      tags:
+      - answers
+swagger: "2.0"

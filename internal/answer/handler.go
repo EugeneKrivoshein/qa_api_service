@@ -15,6 +15,18 @@ type Handler struct {
 	Service *Service
 }
 
+// CreateAnswer godoc
+// @Summary Create answer
+// @Description Добавляет ответ к вопросу
+// @Tags answers
+// @Accept json
+// @Produce json
+// @Param id path int true "Question ID"
+// @Param answer body models.Answer true "Answer body"
+// @Success 200 {object} models.Answer
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /questions/{id}/answers [post]
 func (h *Handler) CreateAnswer(w http.ResponseWriter, r *http.Request) {
 	questionIDStr := mux.Vars(r)["id"]
 	questionID, _ := strconv.Atoi(questionIDStr)
@@ -41,6 +53,15 @@ func (h *Handler) CreateAnswer(w http.ResponseWriter, r *http.Request) {
 	response.WriteJSON(w, a)
 }
 
+// GetAnswerByID godoc
+// @Summary Get answer by ID
+// @Description Получает ответ по ID
+// @Tags answers
+// @Produce json
+// @Param id path int true "Answer ID"
+// @Success 200 {object} models.Answer
+// @Failure 404 {object} map[string]string
+// @Router /answers/{id} [get]
 func (h *Handler) GetAnswerByID(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(idStr)
@@ -55,6 +76,14 @@ func (h *Handler) GetAnswerByID(w http.ResponseWriter, r *http.Request) {
 	logrus.Infof("Fetched answer ID=%d", id)
 }
 
+// DeleteAnswer godoc
+// @Summary Delete answer
+// @Description Удаляет ответ
+// @Tags answers
+// @Param id path int true "Answer ID"
+// @Success 204 {string} string "No Content"
+// @Failure 404 {object} map[string]string
+// @Router /answers/{id} [delete]
 func (h *Handler) DeleteAnswer(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(idStr)

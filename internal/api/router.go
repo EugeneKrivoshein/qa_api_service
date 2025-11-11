@@ -3,9 +3,11 @@ package api
 import (
 	"net/http"
 
+	_ "github.com/EugeneKrivoshein/qa_api_service/docs"
 	"github.com/EugeneKrivoshein/qa_api_service/internal/answer"
 	"github.com/EugeneKrivoshein/qa_api_service/internal/question"
 	"github.com/gorilla/mux"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func NewRouter(qHandler *question.Handler, aHandler *answer.Handler) *mux.Router {
@@ -21,6 +23,8 @@ func NewRouter(qHandler *question.Handler, aHandler *answer.Handler) *mux.Router
 	r.HandleFunc("/questions/{id:[0-9]+}/answers", aHandler.CreateAnswer).Methods(http.MethodPost)
 	r.HandleFunc("/answers/{id:[0-9]+}", aHandler.GetAnswerByID).Methods(http.MethodGet)
 	r.HandleFunc("/answers/{id:[0-9]+}", aHandler.DeleteAnswer).Methods(http.MethodDelete)
+
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	return r
 }
